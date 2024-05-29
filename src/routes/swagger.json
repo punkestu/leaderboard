@@ -1,0 +1,531 @@
+{
+	"openapi": "3.0.2",
+	"info": {
+		"title": "Leaderboard API - OpenAPI 3.0",
+		"description": "This is a Leaderboard API Server that use Sveltekit",
+		"contact": {
+			"email": "pangestubima89@gmail.com"
+		},
+		"version": "1.0.0"
+	},
+	"servers": [
+		{
+			"url": "/api"
+		}
+	],
+	"tags": [
+		{
+			"name": "Leaderboard",
+			"description": "Manage Leaderboard data"
+		}
+	],
+	"paths": {
+		"/leaderboard": {
+			"get": {
+				"tags": ["Leaderboard"],
+				"summary": "Get leaderboard",
+				"description": "Get all registered game leaderboard",
+				"operationId": "getGames",
+				"responses": {
+					"200": {
+						"description": "Successful operation",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"body": {
+											"$ref": "#/components/schemas/Leaderboard"
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal Server Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string",
+											"example": "Internal Server Error"
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"tags": ["Leaderboard"],
+				"summary": "Add new game",
+				"description": "Add a new game leaderboard",
+				"operationId": "addGame",
+				"requestBody": {
+					"description": "Create a new game leaderboard",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateLeaderboard"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "Successful operation",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"body": {
+											"$ref": "#/components/schemas/CreatedLeaderboard"
+										}
+									}
+								}
+							}
+						}
+					},
+					"409": {
+						"description": "Invalid input",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string",
+											"example": "Leaderboard already exist"
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal Server Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string",
+											"example": "Internal Server Error"
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/leaderboard/{game}": {
+			"get": {
+				"tags": ["Leaderboard"],
+				"summary": "Get leaderboard champion",
+				"description": "Get all 3 highest player in registered game leaderboard",
+				"operationId": "getGameChampion",
+				"parameters": [
+					{
+						"name": "game",
+						"in": "path",
+						"description": "Game name",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful operation",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"body": {
+											"$ref": "#/components/schemas/LeaderboardChampions"
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal Server Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string",
+											"example": "Internal Server Error"
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"tags": ["Leaderboard"],
+				"summary": "Add new champion",
+				"description": "Add a new champion into game leaderboard",
+				"operationId": "addChampion",
+				"parameters": [
+					{
+						"name": "game",
+						"in": "path",
+						"description": "Game name",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"description": "Create a new game leaderboard champion",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AddChampion"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "Negatif successful operation",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"body": {
+											"type": "object",
+											"properties": {
+												"message": {
+													"type": "string",
+													"example": "You are not in leaderboard"
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					},
+					"201": {
+						"description": "Successful operation",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"body": {
+											"type": "object",
+											"properties": {
+												"message": {
+													"type": "string",
+													"example": "You are in leaderboard"
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid input",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string",
+											"example": "Invalid input"
+										}
+									}
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "No API Key",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string",
+											"example": "Unauthorized"
+										}
+									}
+								}
+							}
+						}
+					},
+					"403": {
+						"description": "No permission to access this Game",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string",
+											"example": "Game key invalid"
+										}
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Game not found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string",
+											"example": "Game not found"
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal Server Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string",
+											"example": "Internal Server Error"
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"api_key": []
+					}
+				]
+			},
+			"delete": {
+				"tags": ["Leaderboard"],
+				"summary": "Delete game",
+				"description": "Delete a game leaderboard",
+				"operationId": "deleteGame",
+				"parameters": [
+					{
+						"name": "game",
+						"in": "path",
+						"description": "Game name",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful operation",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string",
+											"example": "Leaderboard reset"
+										}
+									}
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "No API Key",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string",
+											"example": "Unauthorized"
+										}
+									}
+								}
+							}
+						}
+					},
+					"403": {
+						"description": "No permission to access this Game",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string",
+											"example": "Game key invalid"
+										}
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Game not found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string",
+											"example": "Game not found"
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal Server Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string",
+											"example": "Internal Server Error"
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"api_key": []
+					}
+				]
+			}
+		}
+	},
+	"components": {
+		"schemas": {
+			"Leaderboard": {
+				"type": "object",
+				"properties": {
+					"leaderboard": {
+						"type": "array",
+						"items": {
+							"type": "string",
+							"example": "game1"
+						}
+					}
+				}
+			},
+			"CreateLeaderboard": {
+				"type": "object",
+				"properties": {
+					"game": {
+						"type": "string",
+						"example": "game name"
+					},
+					"email": {
+						"type": "string",
+						"example": "helloworld@mail.com"
+					}
+				}
+			},
+			"CreatedLeaderboard": {
+				"type": "object",
+				"properties": {
+					"message": {
+						"type": "string",
+						"example": "Leaderboard created"
+					},
+					"key": {
+						"type": "string",
+						"example": "game1"
+					}
+				}
+			},
+			"AddChampion": {
+				"type": "object",
+				"properties": {
+					"name": {
+						"type": "string",
+						"example": "player1"
+					},
+					"score": {
+						"type": "integer",
+						"example": 100
+					}
+				}
+			},
+			"LeaderboardChampions": {
+				"type": "object",
+				"properties": {
+					"name": {
+						"type": "string",
+						"example": "game1"
+					},
+					"leaderboard": {
+						"type": "array",
+						"items": {
+							"type": "object",
+							"properties": {
+								"player": {
+									"type": "string",
+									"example": "player1"
+								},
+								"score": {
+									"type": "integer",
+									"example": 100
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"securitySchemes": {
+			"api_key": {
+				"type": "apiKey",
+				"name": "x-api-key",
+				"in": "header"
+			}
+		}
+	}
+}
